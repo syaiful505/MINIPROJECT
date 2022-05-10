@@ -1,15 +1,20 @@
 const { gql } = require("apollo-server");
 
 module.exports = gql`
-  type Message {
-    text: String
-    createdAt: String
-    createdBy: String
-  }
   enum Level {
     Administrator
     Creator
     Enjoyer
+  }
+  enum Sorting {
+    asc
+    desc
+  }
+
+  type Message {
+    text: String
+    createdAt: String
+    createdBy: String
   }
   type User {
     _id: ID!
@@ -54,13 +59,16 @@ module.exports = gql`
   input UserUpdate {
     _id: ID!
     username: String
-
+  }
+  input UserSortingInput {
+    sort_by: Sorting
   }
 
   type Query {
     message(id: ID!): Message
-    user(id: ID!): User
-    getAllUser(user_input: Pagination): User
+    lookUser: [User]
+    getAllUser(user_input: Pagination): [User]
+    getUserSort(user_input: UserSortingInput): [User]
     song(id: ID!): Song
   }
   type Mutation {
