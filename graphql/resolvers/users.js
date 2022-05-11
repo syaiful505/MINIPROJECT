@@ -47,6 +47,16 @@ async function getUserSort(_, { user_input }) {
     throw err;
   }
 }
+async function getUserById(_, { user_input }) {
+  try {
+    const {user_id} = user_input;
+    const res = await User.findById(user_id);
+    return res;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
 
 // ======Mutation======
 async function registerUser(
@@ -75,11 +85,11 @@ async function registerUser(
       password: encryptedPassword,
       user_type: user_type,
     });
-    // Create our JWT (attach to our User model)
-    const token = jwt.sign({ user_id: newUser._id, email }, "UNSAFE_STRING", {
-      expiresIn: "7d",
-    });
-    newUser.token = token;
+    // // Create our JWT (attach to our User model)
+    // const token = jwt.sign({ user_id: newUser._id, email }, "UNSAFE_STRING", {
+    //   expiresIn: "7d",
+    // });
+    // newUser.token = token;
 
     // Save our user in mongoDB
     const res = await newUser.save();
@@ -93,7 +103,7 @@ async function registerUser(
   }
 }
 
-async function loginUser(_, { loginInput: { email, password, token } }) {
+async function loginUser(_, { loginInput: { email, password } }) {
   try {
     const user = await User.findOne({ email });
     //check if the entered password equals the encrypted password
@@ -115,14 +125,18 @@ async function loginUser(_, { loginInput: { email, password, token } }) {
 
 async function updateUser(
   _,
-  { user_update: { _id, username, email, password } }
+  { user_update: { ID, username, email, password, user_type } }
 ) {
   try {
     var encryptedPassword = await bcrypt.hash(password, 10);
-    const res = await User.findByIdAndUpdate(_id, {
+    const res = await User.findByIdAndUpdate(ID, {
       username: username,
       email: email,
+      user_type: user_type,
       password: encryptedPassword,
+    },
+    {
+      new: true
     });
     return res;
   } catch (err) {
@@ -141,5 +155,6 @@ module.exports = {
     lookUser,
     getAllUser,
     getUserSort,
+    getUserById,
   },
 };

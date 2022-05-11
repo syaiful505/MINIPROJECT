@@ -45,7 +45,6 @@ module.exports = gql`
   input LoginInput {
     email: String
     password: String
-    token: String
   }
   input Pagination {
     skip: Int
@@ -57,11 +56,16 @@ module.exports = gql`
     duration: Int
   }
   input UserUpdate {
-    _id: ID!
     username: String
+    email: String
+    password: String
+    user_type: Level
   }
   input UserSortingInput {
     sort_by: Sorting
+  }
+  input UserInputId {
+    user_id: ID
   }
 
   type Query {
@@ -69,6 +73,7 @@ module.exports = gql`
     lookUser: [User]
     getAllUser(user_input: Pagination): [User]
     getUserSort(user_input: UserSortingInput): [User]
+    getUserById(user_input: UserInputId): User
     song(id: ID!): Song
   }
   type Mutation {
