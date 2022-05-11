@@ -1,15 +1,12 @@
 const Song = require("../../model/Song/Song_Schema");
 
-async function addSong(_, {songInput: { name, genre, duration, user_id }})
-{
+async function addSong(_, { songInput: { name, genre, duration, user_id } }) {
   try {
     const newSong = new Song({
       name: name,
       genre: genre,
       duration: duration,
-      created_by: {
-        user_id: user_id,
-      },
+      created_by: user_id,
     });
     const res = await newSong.save();
     return {
