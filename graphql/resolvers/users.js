@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 // ======Query======
-async function lookUser(_, _, context) {
+async function lookUser(_, args, context) {
   try {
     const res = await User.find();
     return res;
@@ -52,6 +52,31 @@ async function getUserById(_, { user_input }) {
     const { user_id } = user_input;
     const res = await User.findById(user_id);
     return res;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+async function getAllUserFilter(_, { user_input }) {
+  try {
+    if (!user_input) {
+      throw new Error('Please input the data');
+    } else {
+      const { username, user_type } = user_input;
+      
+      const regName = new RegExp(username, 'i');
+      const regUserType = new RegExp(user_type, 'i');
+
+      const res = await User.find({
+        username: {
+          $regex: regName
+        },
+        user_type: {
+          $regex: regUserType
+        }
+      });
+      return res;
+    }
   } catch (err) {
     console.log(err);
     throw err;
@@ -153,5 +178,6 @@ module.exports = {
     getAllUser,
     getUserSort,
     getUserById,
+    getAllUserFilter,
   },
 };

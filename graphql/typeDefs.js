@@ -52,6 +52,10 @@ module.exports = gql`
     skip: Int
     limit: Int
   }
+  input FilterRegex {
+    username: String
+    user_type: Level
+  }
   input SongInput {
     name: String
     genre: String
@@ -74,6 +78,7 @@ module.exports = gql`
     message(id: ID!): Message
     lookUser: User
     getAllUser(user_input: Pagination): [User]
+    getAllUserFilter(user_input: FilterRegex): [User]
     getUserSort(user_input: UserSortingInput): [User]
     getUserById(user_input: UserInputId): User
     song(id: ID!): Song

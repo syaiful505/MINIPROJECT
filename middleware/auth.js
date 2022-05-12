@@ -33,7 +33,7 @@ const requireAuth = async (resolver, parent, args, context) => {
 
 let authMiddleware = {
   Query: {
-    lookUser: requireAuth,
+    getAllUser: requireAuth,
   },
   // Mutation: {},
 };
