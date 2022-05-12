@@ -87,7 +87,7 @@ module.exports = gql`
     createMessage(messageInput: MessageInput): Message!
     registerUser(registerInput: RegisterInput): User
     loginUser(loginInput: LoginInput): Token
-    updateUser(user_update: UserUpdate): User
-    addSong(songInput: SongInput): Song
+    updateUser(user_input: UserUpdate): User
+    addSong(song_input: SongInput): Song
   }
 `;

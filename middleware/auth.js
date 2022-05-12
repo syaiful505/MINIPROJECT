@@ -35,7 +35,9 @@ let authMiddleware = {
   Query: {
     getAllUser: requireAuth,
   },
-  // Mutation: {},
+  Mutation: {
+    updateUser: requireAuth,
+  },
 };
 
 module.exports = authMiddleware;

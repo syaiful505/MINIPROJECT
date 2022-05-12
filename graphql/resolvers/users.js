@@ -142,26 +142,16 @@ async function loginUser(_, { loginInput: { email, password } }) {
   }
 }
 
-async function updateUser(
-  _,
-  { user_update: { ID, username, email, password, user_type } }
-) {
+async function updateUser(_, { user_input }, context) {
   try {
-    var encryptedPassword = await bcrypt.hash(password, 10);
-    const res = await User.findByIdAndUpdate(
-      ID,
-      {
-        username: username,
-        email: email,
-        user_type: user_type,
-        password: encryptedPassword,
-      },
-      {
-        new: true,
-      }
+    const user = await User.findByIdAndUpdate(
+      { _id: context.user_id },
+      { $set: user_input },
+      { new: true}
     );
-    return res;
-  } catch (err) {
+    return user;
+  }
+  catch (err) {
     console.log(err);
     throw err;
   }
