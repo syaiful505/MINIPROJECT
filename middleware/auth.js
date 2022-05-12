@@ -1,22 +1,41 @@
 const { AuthenticationError } = require("apollo-server");
-
+const User = require("../model/User/User");
 const jwt = require("jsonwebtoken");
 
-module.exports = (context) => {
-  //context = { ... headers }
-  const authHeader = context.req.headers.authorization;
-  if (authHeader) {
-    // Bearer ...
-    const token = authHeader.split("Bearer")[1];
-    if (token) {
-      try {
-        const user = jwt.verify(token, "UNSAFE_STRING");
-        return user;
-      } catch (err) {
-        throw new AuthenticationError("Invalid/Expired token");
-      }
-    }
-    throw new Error("Authentication token must be 'Bearer [token]");
+function getUser(token) {
+  const tokenDecode = jwt.verify(
+    token,
+    process.env.JWT_SECRET_KEY || "SECRET_KEY"
+  );
+  return tokenDecode;
+}
+
+const requireAuth = async (resolver, parent, args, context) => {
+  let Authorization = context.req.get("Authorization");
+  if (!Authorization) {
+    throw new AuthenticationError("Authorization header is missing");
   }
-  throw new Error("Authorization header must be provided");
+  let token = Authorization.replace("Bearer ", "");
+  token = token.replace(/"/g, "");
+
+  let userId = getUser(token);
+
+  let user = await User.findOne({ _id: userId }).select("_id, user_type");
+  if (!user) {
+    throw new AuthenticationError("UnAuthenticated");
+  }
+
+  context.userId = user._id;
+  context.userType = user.user_type;
+
+  return resolver();
 };
+
+let authMiddleware = {
+  Query: {
+    lookUser: requireAuth,
+  },
+  // Mutation: {},
+};
+
+module.exports = authMiddleware;

@@ -49,7 +49,7 @@ async function getUserSort(_, { user_input }) {
 }
 async function getUserById(_, { user_input }) {
   try {
-    const {user_id} = user_input;
+    const { user_id } = user_input;
     const res = await User.findById(user_id);
     return res;
   } catch (err) {
@@ -129,15 +129,18 @@ async function updateUser(
 ) {
   try {
     var encryptedPassword = await bcrypt.hash(password, 10);
-    const res = await User.findByIdAndUpdate(ID, {
-      username: username,
-      email: email,
-      user_type: user_type,
-      password: encryptedPassword,
-    },
-    {
-      new: true
-    });
+    const res = await User.findByIdAndUpdate(
+      ID,
+      {
+        username: username,
+        email: email,
+        user_type: user_type,
+        password: encryptedPassword,
+      },
+      {
+        new: true,
+      }
+    );
     return res;
   } catch (err) {
     console.log(err);
