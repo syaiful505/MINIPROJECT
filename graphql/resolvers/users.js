@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 // ======Query======
-async function lookUser(_) {
+async function lookUser(_, _, context) {
   try {
     const res = await User.find();
     return res;
@@ -85,12 +85,7 @@ async function registerUser(
       password: encryptedPassword,
       user_type: user_type,
     });
-    // // Create our JWT (attach to our User model)
-    // const token = jwt.sign({ user_id: newUser._id, email }, "UNSAFE_STRING", {
-    //   expiresIn: "7d",
-    // });
-    // newUser.token = token;
-
+    
     // Save our user in mongoDB
     const res = await newUser.save();
     return {
@@ -106,7 +101,6 @@ async function registerUser(
 async function loginUser(_, { loginInput: { email, password } }) {
   try {
     const user = await User.findOne({ email });
-    //check if the entered password equals the encrypted password
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign({ user_id: user._id, email }, "UNSAFE_STRING", {
         expiresIn: "7d",

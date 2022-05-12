@@ -22,6 +22,8 @@ module.exports = gql`
     email: String
     password: String
     user_type: Level
+  }
+  type Token {
     token: String
   }
   type Song {
@@ -70,7 +72,7 @@ module.exports = gql`
 
   type Query {
     message(id: ID!): Message
-    lookUser: [User]
+    lookUser: User
     getAllUser(user_input: Pagination): [User]
     getUserSort(user_input: UserSortingInput): [User]
     getUserById(user_input: UserInputId): User
@@ -79,7 +81,7 @@ module.exports = gql`
   type Mutation {
     createMessage(messageInput: MessageInput): Message!
     registerUser(registerInput: RegisterInput): User
-    loginUser(loginInput: LoginInput): User
+    loginUser(loginInput: LoginInput): Token
     updateUser(user_update: UserUpdate): User
     addSong(songInput: SongInput): Song
   }

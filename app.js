@@ -14,7 +14,6 @@ const MONGODB = "mongodb://localhost:27017/mini-project";
 const executableSchema = makeExecutableSchema({ typeDefs, resolvers });
 const protectedSchema = applyMiddleware(executableSchema, authMiddleware);
 
-//server conect
 const server = new ApolloServer({
   schema: protectedSchema,
   typeDefs,
@@ -24,6 +23,7 @@ const server = new ApolloServer({
   }),
 });
 
+// Database Configure
 mongoose
   .connect(MONGODB, {
     useNewUrlParser: true,
@@ -34,40 +34,11 @@ mongoose
   .catch((error) => {
     console.log("Error Not Connect to MongoDB", error.message);
   });
-// mongoose
-//   .connect(MONGODB, { useNewUrlParser: true })
-//   .then(() => {
-//     console.log("MongoDB Connected");
-//     // server.applyMiddleware({ app });
-//     // return app.listen(3300);
-//   })
-//   .then((res) => {
-//     console.log(`Server running at ${res.url}`);
-//   });
 
-server.applyMiddleware({ app });
-app.listen(port, () => {
-  console.log(`Server is running in port ${port}`);
-});
-// server.applyMiddleware({ app });
-// app.listen(port, () => {
-//   console.log(`Server is running in port ${port}`);
-// });
-
-// const MONGODB = "mongodb://localhost:27017/mini-project";
-
-// const server = new ApolloServer({
-//   typeDefs,
-//   resolvers,
-// });
-
-// mongoose
-//   .connect(MONGODB, {
-//     useNewUrlParser: true,
-//   })
-//   .then((res) => {
-//     console.log("MongoDB Connected");
-//   })
-//   .catch((error) => {
-//     console.log("Error Not Connect to MongoDB", error.message);
-//   });
+//server Configure
+server.start().then(res => {
+  server.applyMiddleware({ app });
+  app.listen({ port }, () =>
+    console.log("Server Conected")
+  )
+ })

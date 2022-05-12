@@ -1,11 +1,11 @@
-const { AuthenticationError } = require("apollo-server");
+const { AuthenticationError } = require("apollo-server-express");
 const User = require("../model/User/User");
 const jwt = require("jsonwebtoken");
 
 function getUser(token) {
   const tokenDecode = jwt.verify(
     token,
-    process.env.JWT_SECRET_KEY || "SECRET_KEY"
+    process.env.JWT_SECRET_KEY || "UNSAFE_STRING"
   );
   return tokenDecode;
 }
