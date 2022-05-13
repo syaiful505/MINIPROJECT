@@ -6,6 +6,7 @@ const port = 3300;
 
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
+const { loaders } = require("./graphql/loaders/index");
 const { authMiddleware } = require("./middleware/index");
 const { makeExecutableSchema } = require("graphql-tools");
 const { applyMiddleware } = require("graphql-middleware");
@@ -20,6 +21,7 @@ const server = new ApolloServer({
   resolvers,
   context: (req) => ({
     req: req.req,
+    loaders: loaders(),
   }),
 });
 
@@ -36,9 +38,7 @@ mongoose
   });
 
 //server Configure
-server.start().then(res => {
+server.start().then((res) => {
   server.applyMiddleware({ app });
-  app.listen({ port }, () =>
-    console.log("Server Conected")
-  )
- })
+  app.listen({ port }, () => console.log("Server Conected"));
+});

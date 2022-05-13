@@ -32,6 +32,7 @@ module.exports = gql`
     genre: String
     duration: Int
     created_by: User
+    count_document: Int
   }
 
   input MessageInput {
@@ -74,6 +75,21 @@ module.exports = gql`
     user_id: ID
   }
 
+  input SongPaginationInput {
+    limit: Int
+    page: Int
+  }
+  input SongFilterInput {
+    name: String
+    genre: String
+    creator_name: String
+  }
+  input SongSortingInput {
+    name: Sorting
+    genre: Sorting
+    creator_name: Sorting
+  }
+
   type Query {
     message(id: ID!): Message
     lookUser: User
@@ -81,13 +97,23 @@ module.exports = gql`
     getAllUserFilter(user_input: FilterRegex): [User]
     getUserSort(user_input: UserSortingInput): [User]
     getUserById(user_input: UserInputId): User
-    song(id: ID!): Song
+    getAllSongs(
+      pagination: SongPaginationInput
+      filter: SongFilterInput
+      sorting: SongSortingInput
+    ): [Song]
+
+    getSongById(_id: ID): Song
   }
   type Mutation {
     createMessage(messageInput: MessageInput): Message!
+
     registerUser(registerInput: RegisterInput): User
     loginUser(loginInput: LoginInput): Token
     updateUser(user_input: UserUpdate): User
+
     addSong(song_input: SongInput): Song
+    updateSong(_id: ID!, song_input: SongInput): Song!
+    deleteSong(_id: ID): Boolean
   }
 `;

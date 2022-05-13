@@ -18,15 +18,15 @@ const requireAuth = async (resolver, parent, args, context) => {
   let token = Authorization.replace("Bearer ", "");
   token = token.replace(/"/g, "");
 
-  let userId = getUser(token);
+  let user_id = getUser(token);
 
   let user = await User.findOne({ _id: userId }).select("_id, user_type");
   if (!user) {
     throw new AuthenticationError("UnAuthenticated");
   }
 
-  context.userId = user._id;
-  context.userType = user.user_type;
+  context.user_id = user._id;
+  context.user_type = user.user_type;
 
   return resolver();
 };
@@ -34,9 +34,14 @@ const requireAuth = async (resolver, parent, args, context) => {
 let authMiddleware = {
   Query: {
     getAllUser: requireAuth,
+    getAllSongs: requireAuth,
+    getSongById: requireAuth,
   },
   Mutation: {
     updateUser: requireAuth,
+    addSong: requireAuth,
+    updateSong: requireAuth,
+    deleteSong: requireAuth,
   },
 };
 
