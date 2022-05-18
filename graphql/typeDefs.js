@@ -102,8 +102,12 @@ module.exports = gql`
       filter: SongFilterInput
       sorting: SongSortingInput
     ): [Song]
-
     getSongById(_id: ID): Song
+    getAllPlaylist(
+      filter: PlaylistFilterInput
+      sorting: PlaylistSortingInput
+    ): [Playlist]
+    getOnePlaylist(_id: ID): Playlist
   }
   type Mutation {
     createMessage(messageInput: MessageInput): Message!
@@ -115,5 +119,19 @@ module.exports = gql`
     addSong(song_input: SongInput): Song
     updateSong(_id: ID!, song_input: SongInput): Song!
     deleteSong(_id: ID): Boolean
+
+    createPlaylist(playlist_input: playlistInput): Playlist
+    addSongToPlaylist(_id: ID!, song_ids: [ID]): Playlist!
+    addCollab(
+      _id: ID!
+      collaborator_ids: [ID]
+      created_by: ID
+    ): Playlist!
+    deleteSongPlaylist(_id: ID!, song_ids: [ID]): Playlist!
+    deleteCollabPlaylist(
+      _id: ID!
+      collaborator_ids: [ID]
+      created_by: ID
+    ): Playlist!
   }
 `;

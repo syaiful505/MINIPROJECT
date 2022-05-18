@@ -25,6 +25,10 @@ async function collaborator_ids(parent, args, context) {
 }
 
 //Query
+async function getOnePlaylist(_, { _id }) {
+  return await Playlist.findById(_id);
+}
+
 async function getAllPlaylist(_, { filter, sorting }) {
   try {
     const query = {
@@ -169,9 +173,6 @@ async function addCollab(_, {_id, collaborator_ids, created_by})
     throw err;
   }
 }
-async function getOnePlaylist(_, { _id }) {
-  return await Playlist.findById(_id);
-}
 async function deleteSongPlaylist(_, { _id, song_ids }, context){
   try {
     const check = await Playlist.findOne({
@@ -212,8 +213,20 @@ async function deleteCollabPlaylist(_, { _id, collabrator_ids, created_by }, con
   }
 }
 module.exports = {
-  Query: {},
-  Mutation: {},
+  Query: {
+    getAllPlaylist,
+    getOnePlaylist,
+  },
+  Mutation: {
+    createPlaylist,
+    addSongToPlaylist,
+    addCollab,
+    deleteSongPlaylist,
+    deleteCollabPlaylist,
+  },
+  Song: {
+    created_by,
+  },
   Playlist: {
     song_ids,
     collaborator_ids,

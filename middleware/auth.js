@@ -36,12 +36,16 @@ let authMiddleware = {
     getAllUser: requireAuth,
     getAllSongs: requireAuth,
     getSongById: requireAuth,
+    getAllPlaylist: requireAuth,
   },
   Mutation: {
     updateUser: requireAuth,
     addSong: requireAuth,
     updateSong: requireAuth,
     deleteSong: requireAuth,
+    createPlaylist: requireAuth,
+    addSongToPlaylist: requireAuth,
+    deleteSongPlaylist: requireAuth,
   },
 };
 
